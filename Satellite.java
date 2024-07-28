@@ -1,46 +1,54 @@
-package SatelliteCommandSystem;
-import java.util.*;
+package satellite;
 import java.util.logging.Logger;
+
 
 public class Satellite {
     private static final Logger logger = Logger.getLogger(Satellite.class.getName());
-    static int id=1;
-    int ID;
-    private String direction;
-    private boolean activatedSolarPanels;
-    private int collectedData;
-    public Satellite()
-    {
-        this.ID=id;
-        id++;
-        this.direction="North";
-        this.activatedSolarPanels=false;
-        this.collectedData=0;
+
+    private String orientation;
+    private boolean solarPanelsActive;
+    private int dataCollected;
+
+    public Satellite() {
+        this.orientation = "North";
+        this.solarPanelsActive = false;
+        this.dataCollected = 0;
         logger.info("Satellite initialized with Orientation: North, Solar Panels: Inactive, Data Collected: 0");
-
-    }
-    void rotate(String direction)
-    {
-        this.direction=direction;
-        logger.info("Satellite:"+ this.ID+" rotated to " + direction);
-    }
-    void activateSolarPanels()
-    {
-        this.activatedSolarPanels=true;
-        logger.info("Satellite: " +this.ID+"Solar Panels: Active");
-    }
-    void setCollectedData()
-    {
-        if(this.activatedSolarPanels) {
-            collectedData += 10;
-            logger.info("Satellite data collected: " + collectedData);
-        }
-        else {
-            logger.info("Activate the solar panels of Satellite"+this.ID+" to collect data");
-        }
-    }
-    void satelliteDetails(){
-        logger.info("Satellite initialized with Orientation: "+this.direction+", Solar Panels: "+ (activatedSolarPanels?"Active":"Inactive")+" ,Data Collected: "+this.collectedData);
     }
 
+    public void rotate(String direction) {
+        if (direction.equals("North") || direction.equals("South") || direction.equals("East") || direction.equals("West")) {
+            this.orientation = direction;
+            logger.info("Satellite rotated to " + direction);
+        } else {
+            logger.warning("Invalid direction provided: " + direction);
+            throw new IllegalArgumentException("Invalid direction: " + direction);
+        }
+    }
+
+    public void activatePanels() {
+        this.solarPanelsActive = true;
+        logger.info("Solar panels activated");
+    }
+
+    public void deactivatePanels() {
+        this.solarPanelsActive = false;
+        logger.info("Solar panels deactivated");
+    }
+
+    public void collectData() {
+        if (this.solarPanelsActive) {
+            this.dataCollected += 10;
+            logger.info("Data collected. Total data collected: " + this.dataCollected + " units");
+        } else {
+            logger.warning("Attempted to collect data with inactive solar panels");
+            throw new IllegalStateException("Solar panels must be active to collect data");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Satellite [Orientation=" + orientation + ", Solar Panels=" + (solarPanelsActive ? "Active" : "Inactive") + ", Data Collected=" + dataCollected + "]";
+    }
 }
+
